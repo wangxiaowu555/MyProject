@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.yingside.dao.WormMapper">
+
+    <resultMap id="wMap" type="com.yingside.po.Worm">
+        <id column="pk_wormID" property="id"></id>
+        <result column="f_wormName" property="wormName"></result>
+        <result column="f_wormName" property="wormName"></result>
+        <result column="f_wormName" property="wormName"></result>
+        <result column="f_wormName" property="wormName"></result>
+    </resultMap>
+
+    <select id="list" resultMap="wMap">
+        select * from t_worm order by pk_wormID limit ${(pageNo-1)*pageSize}, ${pageSize}
+
+</select>
+</mapper>

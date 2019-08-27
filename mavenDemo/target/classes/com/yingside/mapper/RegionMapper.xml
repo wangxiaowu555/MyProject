@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!--动态代理的写法,这里的命名空间必须是接口的路径-->
+<!--<mapper namespace="com.yingside.dao.RegionMapper">-->
+
+<!--如果是注解和xml配合,这里的命名空间必须是自己的路径-->
+<mapper namespace="com.yingside.mapper.RegionMapper">
+
+    <resultMap id="regionMap" type="com.yingside.po.Region">
+        <id column="pk_regionID" property="id"></id>
+        <result column="f_regionName" property="regionName"></result>
+        <result column="f_treeKind" property="treeKind"></result>
+        <result column="f_type" property="type"></result>
+        <result column="f_adTree" property="adTree"></result>
+        <association property="myClass" javaType="com.yingside.po.MyClass">
+            <id column="pk_classID" property="id"></id>
+            <result column="f_className" property="className"></result>
+            <result column="f_leader" property="leader"></result>
+            <result column="f_leaderTel" property="leaderTel"></result>
+            <result column="f_number" property="number"></result>
+            <result column="f_createDate" property="createDate"></result>
+        </association>
+    </resultMap>
+
+
+    <!--<select id="regionList" resultMap="regionMap">-->
+        <!--SELECT-->
+            <!--t_region.pk_regionID,-->
+            <!--t_region.f_regionName,-->
+            <!--t_region.f_treeKind,-->
+            <!--t_region.f_type,-->
+            <!--t_region.f_adTree,-->
+            <!--t_region.fk_classID,-->
+            <!--t_class.pk_classID,-->
+            <!--t_class.f_className,-->
+            <!--t_class.f_leader,-->
+            <!--t_class.f_leaderTel,-->
+            <!--t_class.f_number,-->
+            <!--t_class.f_createDate-->
+        <!--FROM-->
+            <!--t_region-->
+                <!--INNER JOIN t_class ON t_region.fk_classID = t_class.pk_classID-->
+    <!--</select>-->
+
+</mapper>

@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <link rel="stylesheet" href="../layui/css/layui.css">
+</head>
+<body>
+
+
+
+<div class="layui-container">
+
+    <div class="layui-row">
+        <div class="layui-col-md9">
+            <form class="layui-form" action="">
+                <div class="layui-form-item">
+                    <label class="layui-form-label">名字:</label>
+                    <div class="layui-input-block">
+                        <input type="text" id="wormName" name="wormName" required  lay-verify="required" placeholder="请输入标题" autocomplete="off" class="layui-input">
+                    </div>
+                </div>
+
+                <div class="layui-form-item">
+                    <label class="layui-form-label">宿主:</label>
+                    <div class="layui-input-block">
+                        <input type="text" id="hostName" name="hostName" required  lay-verify="required" placeholder="请输入标题" autocomplete="off" class="layui-input">
+                    </div>
+                </div>
+
+                <div class="layui-form-item">
+                    <div class="layui-input-block">
+                        <button class="layui-btn" type="button" lay-filter="formDemo" id="btnQuery">查询</button>
+                        <button type="reset" class="layui-btn layui-btn-primary">重置</button>
+                    </div>
+                </div>
+
+
+            </form>
+        </div>
+
+
+        <div class="layui-row">
+            <div class="layui-col-md9">
+                <table id="demo" lay-filter="test"></table>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+
+
+
+<script type="text/html" id="colToolBar">
+    <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="delete">删除</a>
+</script>
+
+
+
+</body>
+<script src="../layui/layui.all.js"></script>
+<script>
+    (function(){
+        var table = layui.table;
+        var $ = layui.$;
+        //第一个实例
+        // table.render({
+        //     elem: '#demo' //页面的table标签的id
+        //     ,url: '/mavenDemo/worm.do?method=list' //数据接口
+        //     ,cols: [[ //表头
+        //         {field: 'id', title: 'ID', width:80,sort: true, fixed: 'left'}
+        //         ,{field: 'wormName', title: '害虫名', width:80}
+        //         ,{field: 'breed', title: '繁殖期', width:80}
+        //         ,{field: 'hostName', title: '宿主', width:80}
+        //         ,{field: 'enemy', title: '天敌', width:80}
+        //         ,{field: 'harm', title: '危害', width:80}
+        //     ]]
+        // });
+
+
+        //分页
+        /*table.render({
+            elem: '#demo' //页面的table标签的id
+            ,url: '/mavenDemo/worm.do?method=listByPage' //数据接口
+            ,page:true
+            ,limit:5 //改变默认每页显示多少条记录
+            ,limits:[3,5,10,15]  //可以选择每页显示多少条记录
+            //,toolbar: 'default'  //在table头上显示工具条
+            ,request: {
+                pageName: 'pageNo' //页码的参数名称，默认：page
+                ,limitName: 'pageSize' //每页数据量的参数名，默认：limit
+            }
+            ,cols: [[ //表头
+                {field: 'id', title: 'ID', width:80,sort: true, fixed: 'left'}
+                ,{field: 'wormName', title: '害虫名', width:80}
+                ,{field: 'breed', title: '繁殖期', width:80}
+                ,{field: 'hostName', title: '宿主', width:80}
+                ,{field: 'enemy', title: '天敌', width:80}
+                ,{field: 'harm', title: '危害', width:80}
+                ,{fixed:'right',width:150,align:'center',toolbar:'#colToolBar'}
+            ]]
+        });*/
+
+
+        //过滤查询分页
+        table.render({
+            elem: '#demo' //页面的table标签的id
+            ,id:"wormTable"
+            ,url: '/mavenDemo/worm.do?method=query' //数据接口
+            ,page:true
+            ,limit:5 //改变默认每页显示多少条记录
+            ,limits:[3,5,10,15]  //可以选择每页显示多少条记录
+            //,toolbar: 'default'  //在table头上显示工具条
+            ,request: {
+                pageName: 'pageNo' //页码的参数名称，默认：page
+                ,limitName: 'pageSize' //每页数据量的参数名，默认：limit
+            }
+            ,cols: [[ //表头
+                {field: 'id', title: 'ID', width:80,sort: true, fixed: 'left'}
+                ,{field: 'wormName', title: '害虫名', width:80}
+                ,{field: 'breed', title: '繁殖期', width:80}
+                ,{field: 'hostName', title: '宿主', width:80}
+                ,{field: 'enemy', title: '天敌', width:80}
+                ,{field: 'harm', title: '危害', width:80}
+                ,{fixed:'right',width:150,align:'center',toolbar:'#colToolBar'}
+            ]]
+        });
+
+
+        //table查询过滤
+        $('#btnQuery').on('click',function(){
+            //过滤上面id名字叫做wormTable这个表格
+            //等价于重新刷新table的ajax访问/mavenDemo/worm.do?method=query
+            //给上参数 where
+            //如果要这么做,就要求查询的地址与开始初始化的地址是一致的才可以
+            table.reload('wormTable',{
+                where:{
+                    wormName:$('#wormName').val(),
+                    hostName:$('#hostName').val()
+                },
+                page:{
+                    pageNo:1 //重新刷新之后从第几页开始
+                }
+            })
+        });
+
+
+        table.on('tool(test)', function(obj){ //注：tool是工具条事件名，test是table原始容器的属性 lay-filter="对应的值"
+            var data = obj.data; //获得当前行数据
+            var layEvent = obj.event; //获得 lay-event 对应的值（也可以是表头的 event 参数对应的值）
+            var tr = obj.tr; //获得当前行 tr 的DOM对象
+
+            console.log(data);
+            console.log(layEvent);
+            console.log(tr);
+
+            if(layEvent === 'delete'){ //删除
+
+                layer.confirm('你确定要删除吗?',function(index){
+                    //确定删除就会往服务器发送数据,并删除
+                    $.ajax({
+                        url:'/mavenDemo/worm.do?method=delete',
+                        type:'get',
+                        data:{"id":data.id},
+                        success:function(res){
+                            if(res === "ok"){
+                                layer.msg("删除成功!");
+                                obj.del();//这个方法可以直接将界面上的DOM删除
+                                layer.close(index);
+                            }
+                            else{
+                                layer.msg("删除失败!")
+                            }
+                        }
+                    });
+                })
+            }
+        });
+
+
+
+
+
+
+
+    })();
+
+</script>
+</html>
